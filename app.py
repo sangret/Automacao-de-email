@@ -47,22 +47,30 @@ def download_emails(email_usuário, senha_usuario, pasta_anexos):
 def criar_interface():
     psg.theme('reddit')
 
-    janela_principal = [
-        [psg.Text('E-mail'), psg.Input(key = 'email')],
-        [psg.Text('Senha'), psg.Input(key = 'senha', password_char = '*')],
-        [psg.FolderBrowse('Escolher pasta anexos',target = 'input_anexos'), psg.Input(key = 'input_anexos')],
-        [psg.FolderBrowse('Escolher pasta planilha',target = 'input_planilha'), psg.Input(key = 'input_planilha')],
-        [psg.Button('Salvar')]
+    layout = [
+        [psg.Text('E-mail'), psg.Input(key='email')],
+        [psg.Text('Senha do app'), psg.Input(key='senha', password_char='*')],
+        [psg.Text('Pasta para salvar anexos'), psg.FolderBrowse(target='input_anexos'), psg.Input(key='input_anexos')],
+        [psg.Button('Iniciar Download')]
     ]
 
-    janela = psg.Window('Principal', layout = janela_principal)
+    janela = psg.Window('Automação de Download de E-mails', layout)
 
     while True:
         event, values = janela.read()
+
         if event == psg.WIN_CLOSED:
             break
-        elif event == 'Salvar':
-            email = values['email']
-            senha = values['senha']
-            caminho_anexos = values['input_anexos']
-            caminho_planilha = values['input_planilha']
+        if event == 'Iniciar Download':
+            email_usuario = values['email']
+            senha_usuario = values['senha']
+            pasta_anexos = values['input_anexos']
+            if email_usuario and senha_usuario and pasta_anexos:
+                download_emails(email_usuario, senha_usuario, pasta_anexos)
+            else:
+                psg.popup("Preencha todos os campos!")
+
+    janela.close()
+
+# Iniciar a interface gráfica
+criar_interface()
